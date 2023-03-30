@@ -2,7 +2,7 @@ import numpy as np
 
 # Método para obtener el tamaño de clase
 def data_by_class(classes):
-    cl = list(set(classes)) # Obtener número de clases
+    cl = list(set(list(classes))) # Obtener número de clases
     dbc = [0] * len(cl) # Lista de elementos por clase inicializada en 0's
     for c in classes:
         dbc[c] += 1 # Aumentar el contador de elementos por clase

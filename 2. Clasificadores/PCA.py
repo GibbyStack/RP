@@ -27,8 +27,11 @@ def PCA (data):
     print('\nEigenvalues\n', eig_vals)
     # Lista de parejas (autovector, autovalor) 
     eigen_pairs = [(np.abs(eig_vals[i]), eig_vecs[:,i]) for i in range(len(eig_vals))]
+    copy_eigen_pairs = eigen_pairs.copy()
     # Ordenamos estas parejas den orden descendiente con la función sort
     eigen_pairs.sort(key=lambda x: x[0], reverse=True)
+    index = [copy_eigen_pairs.index(pos) for pos in eigen_pairs]
+    print('\nIndex\n', index)
     # Calculamar la varianza explicada
     tot = sum(eig_vals)
     var_exp = [(eig_val / tot)*100 for eig_val in sorted(eig_vals, reverse=True)]
@@ -45,7 +48,7 @@ def PCA (data):
         plt.legend(loc='best')
         plt.tight_layout()
     plt.show()
-    return eigen_pairs
+    return eigen_pairs, index
 
 # Método para generar una matriz con los componentes principales
 def weight_matrix(eigen_pairs, n_components):

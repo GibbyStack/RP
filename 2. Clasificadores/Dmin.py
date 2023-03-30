@@ -1,4 +1,4 @@
-from sklearn.model_selection import KFold
+from sklearn.model_selection import StratifiedKFold
 from Performance import *
 from StatiticsPlots import *
 import numpy as np
@@ -38,17 +38,20 @@ def classify_minimum_distance(x_test, prototypes, f_distance, PROBABILITY=False)
 
 # Método de validacion cruzada para minima distancia
 def kfold_dmin(data, classes, f_distance, multiclass=True, n_splits=5):
-    kf = KFold(n_splits=n_splits, shuffle=True) # Generador kfold
+    kf = StratifiedKFold(n_splits=n_splits, shuffle=True) # Generador kfold
+    m = len(set(classes)) # Numero de clases
+    MC = np.zeros((m, m))
     statics = []
-    for (train_index, test_index) in (kf.split(data)):
+    for (train_index, test_index) in (kf.split(data, classes)):
         X_train, X_test, Y_train, Y_test  = data[train_index], data[test_index], classes[train_index], classes[test_index]
         prototypes = train_minimum_distance(X_train, Y_train) # Generar los prototipos de clase
         Y_predicted = classify_minimum_distance(X_test, prototypes, f_distance) # Valores predichos por D-min
         mc = confusion_matrix(Y_predicted, Y_test) # Calcular matriz de confución
+        MC += mc # Sumar la matriz de confución
         ACCr, PPVa, TPRa, TNRa = get_statistics_mc(mc, multiclass) # Obtener estadisticos de la matriz de confución
         statics.append([ACCr, PPVa, TPRa, TNRa])
     statics = np.array(statics)
-    return statics, mc
+    return statics, MC
 
 # Método para validar minima distancia con kfold un determinado número de experimentos
 def n_exps_kfold_dmin(data, classes, f_distances, f_label, multiclass=True, n_splits=5, n_experiments=10):
@@ -67,14 +70,11 @@ def n_exps_kfold_dmin(data, classes, f_distances, f_label, multiclass=True, n_sp
     print(c_matrix)
     experiments_statistics(experiments, f_distances, f_label)
 
+
+
 # from sklearn import datasets
+# from sklearn.model_selection import train_test_split
 # from Distance import *
-
-# # =============================== VARIABLES ===================================
-# # =============================================================================
-# f_distances = [euclidean, cosine_similarity, manhattan, minkowski, correlation]
-# f_label = ['euclidean', 'cosine_similarity', 'manhattan', 'minkowski', 'correlation']
-
 
 # dataset = datasets.load_iris()
 # data = dataset.data # Datos del dataset
@@ -82,4 +82,7 @@ def n_exps_kfold_dmin(data, classes, f_distances, f_label, multiclass=True, n_sp
 # targets = dataset.target_names # Etiqueta de clase
 # labels = dataset.feature_names # Etiquetas de los atributos
 
-# n_exps_kfold_dmin(data, classes, f_distances, f_label, multiclass=False, n_splits=5, n_experiments=2)
+# f_distance = euclidean
+# X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.8, shuffle=True)
+# prototypes = train_minimum_distance(X_train, Y_train)
+# Y_predicted = classify_minimum_distance(X_test, prototypes, f_distance, PROBABILITY=False)
