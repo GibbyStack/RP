@@ -58,7 +58,7 @@ labels = dataset.feature_names # Etiquetas de los atributos
 # print(np.mean(statics, 0))
 # import time
 # start = time.time()
-n_exps_kfold_dmin(data, classes, f_distances, f_label, multiclass=True, n_splits=10, n_experiments=100)
+# n_exps_kfold_dmin(data, classes, f_distances, f_label, multiclass=True, n_splits=10, n_experiments=100)
 # end = time.time()
 # print(f'Time = {end-start} s') # Segundos y microsegundos
 
@@ -90,34 +90,3 @@ X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.
 prototypes = train_minimum_distance(X_train, Y_train)
 Y_predicted = classify_minimum_distance(X_test, prototypes, f_distance, PROBABILITY=True)
 # ROC_curve(Y_train, Y_test, Y_predicted, targets, pos_label=0, multiclass=True)
-
-
-
-# Y_predicted.shape
-# sumY = Y_predicted.sum(axis=1)
-# sumY = np.expand_dims(sumY, axis=1)
-# probaY = 1 - Y_predicted / sumY
-
-# statics = []
-# for i in range(99, -1, -1):
-#     mc = np.zeros((2, 2))
-#     for j in range(len(probaY)):
-#         y_pred = probaY[j]
-#         y_test = Y_test[j]
-#         index = np.where(y_pred == max(y_pred))[0][0]
-#         if index == 0:
-#             if y_test == 0 and max(y_pred) > i/100:
-#                 mc[0][0] += 1
-#             else:
-#                 mc[0][1] += 1
-#         else:
-#             if index == y_test:
-#                 mc[1][1] += 1
-#             else:
-#                 mc[1][0] += 1
-#     _, _, TPR, TNR = get_statistics_mc(mc, multiclass=False)
-#     statics.append([TPR, TNR])
-
-# statics = np.array(statics)
-# y = [i/100 for i in range(0, 100)]
-# plt.plot(y, statics[:, 1])

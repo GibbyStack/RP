@@ -57,3 +57,39 @@ def weight_matrix(eigen_pairs, n_components):
         wm.append(eigen_pairs[i][1])
     wm = np.array(wm)
     return wm.T
+
+# Y_predicted.shape
+# sumY = Y_predicted.sum(axis=1)
+# sumY = np.expand_dims(sumY, axis=1)
+# probaY = 1 - Y_predicted / sumY
+
+# probaY
+
+# cls = set(classes)
+# statics_class = []
+# for c in cls:
+#     statics = []
+#     for i in range(99, -1, -1):
+#         mc = np.zeros((2, 2))
+#         for j in range(len(probaY)):
+#             y_pred = probaY[j]
+#             y_test = Y_test[j]
+#             index = np.where(y_pred == max(y_pred))[0][0]
+#             if index == c:
+#                 if y_test == c and max(y_pred) > i/100:
+#                     mc[0][0] += 1
+#                 else:
+#                     mc[0][1] += 1
+#             else:
+#                 if index == y_test:
+#                     mc[1][1] += 1
+#                 else:
+#                     mc[1][0] += 1
+#         _, _, TPR, TNR = get_statistics_mc(mc, multiclass=False)
+#         statics.append([TPR, TNR])
+#     statics_class.append(statics)
+
+# for statics in statics_class:
+#     statics = np.array(statics)
+#     y = [i/100 for i in range(0, 100)]
+#     plt.plot(y, statics[:, 1])
