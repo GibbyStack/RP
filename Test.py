@@ -51,3 +51,24 @@
 # distances = np.expand_dims(distances, axis=0).T
 # distances = np.append(distances, y_train, axis=1)
 # print(y_train)
+
+# Bank
+# df = pd.read_csv('../Datasets/bank-additional-full.csv', sep=';')
+# df.drop(df[(df['default'] == 'unknown') | (df['housing'] == 'unknown') | (df['housing'] == 'unknown')].index, inplace=True)
+# df.replace({'no': 0, 'yes': 1}, inplace=True)
+# df.poutcome.replace({'failure': 0, 'nonexistent': 1, 'success': 2}, inplace=True)
+# data = df.values[:, [0, 4, 5, 6, 11, 12, 13, 14, 15, 16, 17, 18, 19]].astype('float')
+# classes = df.values[:, -1].astype('int')
+# targets = np.array(['Yes', 'No'])
+# labels = df.columns[[0, 4, 5, 6, 11, 12, 13, 14, 15, 16, 17, 18, 19]].values.astype('str')
+# HIGGS
+# df = pd.read_csv('../Datasets/HIGGS.csv', header=None)
+# Estandarización
+# standar_data = StandardScaler().fit_transform(data) # Estandarizar datos
+
+
+# from sklearn.neighbors import KNeighborsClassifier
+# neigh = KNeighborsClassifier(n_neighbors=5)
+# neigh.fit(X_train, Y_train)
+# predic = neigh.predict(X_test)
+# predic

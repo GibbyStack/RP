@@ -79,6 +79,8 @@ def experiments_statistics(experiments, f_distances, f_label):
         x = x.iloc[:, :-1].astype('float64')
         print(x.describe()) 
 
+
+
 # from sklearn import datasets
 # from sklearn.preprocessing import StandardScaler
 # from Datasets import *

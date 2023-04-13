@@ -2,39 +2,40 @@ from sklearn.model_selection import StratifiedKFold
 from Performance import *
 from StatiticsPlots import *
 import numpy as np
-import pandas as pd
 
-# Método para obtener los prototipos de clase con Minima Distancia
-def train_minimum_distance(x_train, y_train):
-    m = len(set(y_train)) # Numero de clases
-    prototypes = [] # Prototipos
-    data = [[] for x in range(m)] # Datos por clase
-    for i in range(len(x_train)):
-        data[y_train[i]].append(x_train[i])
-    for i in range(m):
-        data_class = np.array(data[i])
-        prototypes.append(np.mean(data_class, 0)) # Agregar el prototipo de clase
-    prototypes = np.array(prototypes)
-    return prototypes
+class MinimumDistance():
+    def __init__(self):
+        self.prototypes = []
 
-# Método para clasificar datos mediante la Minima Distancia
-def classify_minimum_distance(x_test, prototypes, f_distance, PROBABILITY=False):
-    predicted_class = [] # Clasificaciones
-    for x in x_test:
-        gs = [] # Evaluaciones de distancia contra prototipos de clase
-        # g_max = 0 # Evaluación maxima
-        g_min = 0 # Evaluación minima
-        for m in prototypes:
-            g = f_distance(x, m)
-            gs.append(g) # Agregar evaluacion con esa clase
-        if PROBABILITY: 
-            predicted_class.append(gs)
-        if not PROBABILITY:
-            # g_max = max(gs) # Obtener la evaluación con el valor maximo
-            g_min = min(gs)
-            predicted_class.append(gs.index(g_min)) # Obtener el índice de la evaluación maxima
-    predicted_class = np.array(predicted_class)
-    return predicted_class
+    # Método para obtener los prototipos 
+    def fit(self, x_train, y_train):
+        m = len(set(y_train)) # Numero de clases
+        data = [[] for x in range(m)] # Datos por clase
+        for i in range(len(x_train)):
+            data[y_train[i]].append(x_train[i])
+        for i in range(m):
+            data_class = np.array(data[i])
+            self.prototypes.append(np.mean(data_class, 0)) # Agregar el prototipo de clase
+        self.prototypes = np.array(self.prototypes)
+
+    # Método para entrenar el clasificador
+    def predict(self, x_test, f_distance, PROBABILITY=False):
+        predictions = [] # Clasificaciones
+        for x in x_test:
+            gs = [] # Evaluaciones de distancia contra prototipos de clase
+            # g_max = 0 # Evaluación maxima
+            g_min = 0 # Evaluación minima
+            for m in self.prototypes:
+                g = f_distance(x, m)
+                gs.append(g) # Agregar evaluacion con esa clase
+            if not PROBABILITY:
+                # g_max = max(gs) # Obtener la evaluación con el valor maximo
+                g_min = min(gs)
+                predictions.append(gs.index(g_min)) # Obtener el índice de la evaluación maxima
+            if PROBABILITY: 
+                predictions.append(gs)
+        predictions = np.array(predictions)
+        return predictions
 
 # Método de validacion cruzada para minima distancia
 def kfold_dmin(data, classes, f_distance, multiclass=True, n_splits=5):
@@ -44,8 +45,9 @@ def kfold_dmin(data, classes, f_distance, multiclass=True, n_splits=5):
     statics = []
     for (train_index, test_index) in (kf.split(data, classes)):
         X_train, X_test, Y_train, Y_test  = data[train_index], data[test_index], classes[train_index], classes[test_index]
-        prototypes = train_minimum_distance(X_train, Y_train) # Generar los prototipos de clase
-        Y_predicted = classify_minimum_distance(X_test, prototypes, f_distance) # Valores predichos por D-min
+        minimun_distance = MinimumDistance() # Generar los prototipos de clase
+        minimun_distance.fit(X_train, Y_train)
+        Y_predicted = minimun_distance.predict(X_test, f_distance, PROBABILITY=False) # Valores predichos por D-min
         mc = confusion_matrix(Y_predicted, Y_test) # Calcular matriz de confución
         MC += mc # Sumar la matriz de confución
         ACCr, PPVa, TPRa, TNRa = get_statistics_mc(mc, multiclass) # Obtener estadisticos de la matriz de confución

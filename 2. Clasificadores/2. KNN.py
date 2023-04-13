@@ -5,7 +5,6 @@ from Distance import *
 from KNN import *
 from PCA import *
 from Performance import *
-import time
 
 # =============================== VARIABLES ===================================
 # =============================================================================
@@ -16,22 +15,11 @@ f_label = ['euclidean', 'cosine_similarity', 'manhattan', 'minkowski', 'correlat
 
 # ================================ DATASET ====================================
 # =============================================================================
-dataset = datasets.load_wine()
+dataset = datasets.load_iris()
 data = dataset.data # Datos del dataset
 classes = dataset.target # Clases
 targets = dataset.target_names # Etiqueta de clase
 labels = dataset.feature_names # Etiquetas de los atributos
-# Bank
-# df = pd.read_csv('../Datasets/bank-additional-full.csv', sep=';')
-# df.drop(df[(df['default'] == 'unknown') | (df['housing'] == 'unknown') | (df['housing'] == 'unknown')].index, inplace=True)
-# df.replace({'no': 0, 'yes': 1}, inplace=True)
-# df.poutcome.replace({'failure': 0, 'nonexistent': 1, 'success': 2}, inplace=True)
-# data = df.values[:, [0, 4, 5, 6, 11, 12, 13, 14, 15, 16, 17, 18, 19]].astype('float')
-# classes = df.values[:, -1].astype('int')
-# targets = np.array(['Yes', 'No'])
-# labels = df.columns[[0, 4, 5, 6, 11, 12, 13, 14, 15, 16, 17, 18, 19]].values.astype('str')
-# Estandarización
-# data2 = StandardScaler().fit_transform(data) # Estandarizar datos
 
 
 
@@ -44,14 +32,17 @@ labels = dataset.feature_names # Etiquetas de los atributos
 # print(' Average '.center(50, '='))
 # print(np.mean(statics, 0))
 
-start = time.time()
-n_exps_kfold_knn(data, classes, f_distances, f_label, k=3, multiclass=True, n_splits=5, n_experiments=100)
-end = time.time()
-print(end-start)
+# import time
+# start = time.time()
+# n_exps_kfold_knn(data, classes, f_distances, f_label, k=3, multiclass=True, n_splits=5, n_experiments=10)
+# end = time.time()
+# print(f'Time = {end-start} s') # Segundos y microsegundos
+
 
 
 # ================================= PCA =======================================
 # =============================================================================
+# standar_data = StandardScaler().fit_transform(data) # Estandarizar datos
 # eigen_pairs = PCA(data2)
 # wm = weight_matrix(eigen_pairs, 2)
 # data_pca = data @ wm
@@ -61,20 +52,16 @@ print(end-start)
 # print(statics)
 # print(' Average '.center(50, '='))
 # print(np.mean(statics, 0))
+# start = time.time()
 # n_exps_kfold_knn(data, classes, f_distances, f_label, k=5, multiclass=True, n_splits=5, n_experiments=10)
-
+# end = time.time()
+# print(f'Time = {end-start} s') # Segundos y microsegundos
 
 
 # ============================== Curva ROC ====================================
 # =============================================================================
-f_distance = correlation
-X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
-Y_predicted = kNNR(X_train, Y_train, X_test, f_distance, k=3, PROBABILITY=True)
-ROC_curve(Y_train, Y_test, Y_predicted, targets, pos_label=1, multiclass=True)
-
-
-# from sklearn.neighbors import KNeighborsClassifier
-# neigh = KNeighborsClassifier(n_neighbors=5)
-# neigh.fit(X_train, Y_train)
-# predic = neigh.predict(X_test)
-# predic
+# f_distance = correlation
+# X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.2, shuffle=True)
+# knn = KNNRaul()
+# Y_predicted = knn.predict(X_train, Y_train, X_test, f_distance, k=3, PROBABILITY=True)
+# ROC_curve(Y_train, Y_test, Y_predicted, targets, pos_label=1, multiclass=True)
