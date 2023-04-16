@@ -1,4 +1,4 @@
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import KFold
 from Performance import *
 from StatiticsPlots import *
 import numpy as np
@@ -84,7 +84,7 @@ class KNNRaul():
 
 # Método de validación cruzada para k-NN
 def kfold_kNN(data, classes, f_distance, type_KNN='Estandar', k=1, multiclass=True, n_splits=5):
-    kf = StratifiedKFold(n_splits=n_splits, shuffle=True) # Generar kfold
+    kf = KFold(n_splits=n_splits, shuffle=True) # Generar kfold
     m = len(set(classes)) # Numero de clases
     MC = np.zeros((m, m))
     statics = []
@@ -93,7 +93,7 @@ def kfold_kNN(data, classes, f_distance, type_KNN='Estandar', k=1, multiclass=Tr
         if type_KNN == 'Estandar': knn = KNN()
         if type_KNN == 'Raul': knn = KNNRaul()
         Y_predicted = knn.predict(X_train, Y_train, X_test, f_distance, k)    
-        mc = confusion_matrix(Y_predicted, Y_test) # Matriz de confución
+        mc = confusion_matrix(Y_predicted, Y_test, m) # Matriz de confución
         MC += mc # Sumar la matriz de confución
         ACCr, PPVa, TPRa, TNRa = get_statistics_mc(mc, multiclass) # Obtener estadisticos de la matriz de confución
         statics.append([ACCr, PPVa, TPRa, TNRa])

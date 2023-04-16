@@ -1,4 +1,4 @@
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import KFold
 from Performance import *
 import numpy as np
 import pandas as pd
@@ -71,7 +71,7 @@ class NaiveBayes():
     
 # Método de validación cruzada para Naive Bayes
 def kfold_naive_bayes(data, classes, multiclass=True, n_splits=5):
-    kf = StratifiedKFold(n_splits=n_splits, shuffle=True)
+    kf = KFold(n_splits=n_splits, shuffle=True)
     m = len(set(classes))
     MC = np.zeros((m, m))
     statics = []
@@ -80,7 +80,7 @@ def kfold_naive_bayes(data, classes, multiclass=True, n_splits=5):
         naive_bayes = NaiveBayes()
         naive_bayes.fit(X_train, Y_train)
         Y_predicted = naive_bayes.predict(X_test)
-        mc = confusion_matrix(Y_predicted, Y_test) # Matriz de confución
+        mc = confusion_matrix(Y_predicted, Y_test, m) # Matriz de confución
         MC += mc # Sumar la matriz de confución
         ACCr, PPVa, TPRa, TNRa = get_statistics_mc(mc, multiclass) # Obtener estadisticos de la matriz de confución
         statics.append([ACCr, PPVa, TPRa, TNRa])

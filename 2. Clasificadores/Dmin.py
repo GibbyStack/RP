@@ -1,4 +1,4 @@
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import KFold
 from Performance import *
 from StatiticsPlots import *
 import numpy as np
@@ -39,7 +39,7 @@ class MinimumDistance():
 
 # Método de validacion cruzada para minima distancia
 def kfold_dmin(data, classes, f_distance, multiclass=True, n_splits=5):
-    kf = StratifiedKFold(n_splits=n_splits, shuffle=True) # Generador kfold
+    kf = KFold(n_splits=n_splits, shuffle=True) # Generador kfold
     m = len(set(classes)) # Numero de clases
     MC = np.zeros((m, m))
     statics = []
@@ -48,7 +48,7 @@ def kfold_dmin(data, classes, f_distance, multiclass=True, n_splits=5):
         minimun_distance = MinimumDistance() # Generar los prototipos de clase
         minimun_distance.fit(X_train, Y_train)
         Y_predicted = minimun_distance.predict(X_test, f_distance, PROBABILITY=False) # Valores predichos por D-min
-        mc = confusion_matrix(Y_predicted, Y_test) # Calcular matriz de confución
+        mc = confusion_matrix(Y_predicted, Y_test, m) # Calcular matriz de confución
         MC += mc # Sumar la matriz de confución
         ACCr, PPVa, TPRa, TNRa = get_statistics_mc(mc, multiclass) # Obtener estadisticos de la matriz de confución
         statics.append([ACCr, PPVa, TPRa, TNRa])

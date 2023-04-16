@@ -1,4 +1,5 @@
 from sklearn import datasets
+from sklearn.datasets import fetch_openml
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from Distance import *
@@ -8,13 +9,22 @@ from Performance import *
 
 # =============================== VARIABLES ===================================
 # =============================================================================
-f_distances = [euclidean, cosine_similarity, manhattan, minkowski, correlation]
-f_label = ['euclidean', 'cosine_similarity', 'manhattan', 'minkowski', 'correlation']
+f_distances = [euclidean, cosine_similarity, manhattan, minkowski, correlation, chebyshev]
+f_label = ['euclidean', 'cosine_similarity', 'manhattan', 'minkowski', 'correlation', 'chebyshev']
 
 
 
 # ================================ DATASET ====================================
 # =============================================================================
+# dataset = fetch_openml(name='segment')
+# data = np.array(dataset.data)
+# targets = np.array(list(set(dataset.target)))
+# classes = dataset.target
+# for i in range(len(targets)):
+#     classes = classes.replace({targets[i]: i})
+# classes = np.array(classes)
+# labels = list(dataset.feature_names)
+
 dataset = datasets.load_iris()
 data = dataset.data # Datos del dataset
 classes = dataset.target # Clases
@@ -34,7 +44,7 @@ labels = dataset.feature_names # Etiquetas de los atributos
 
 # import time
 # start = time.time()
-# n_exps_kfold_knn(data, classes, f_distances, f_label, k=3, multiclass=True, n_splits=5, n_experiments=10)
+# n_exps_kfold_knn(data, classes, f_distances, f_label, type_KNN='Raul' , k=7, multiclass=True, n_splits=5, n_experiments=100)
 # end = time.time()
 # print(f'Time = {end-start} s') # Segundos y microsegundos
 
@@ -43,7 +53,8 @@ labels = dataset.feature_names # Etiquetas de los atributos
 # ================================= PCA =======================================
 # =============================================================================
 # standar_data = StandardScaler().fit_transform(data) # Estandarizar datos
-# eigen_pairs = PCA(data2)
+# eigen_pairs, index = PCA(standar_data)
+# data_pca = data[:,index[:3]]
 # wm = weight_matrix(eigen_pairs, 2)
 # data_pca = data @ wm
 # statics, mc = kfold_kNN(data, classes, f_distance, k=5, multiclass=False, splits=5)
@@ -53,7 +64,7 @@ labels = dataset.feature_names # Etiquetas de los atributos
 # print(' Average '.center(50, '='))
 # print(np.mean(statics, 0))
 # start = time.time()
-# n_exps_kfold_knn(data, classes, f_distances, f_label, k=5, multiclass=True, n_splits=5, n_experiments=10)
+# n_exps_kfold_knn(data_pca, classes, f_distances, f_label, type_KNN='Raul', k=3, multiclass=True, n_splits=5, n_experiments=100)
 # end = time.time()
 # print(f'Time = {end-start} s') # Segundos y microsegundos
 

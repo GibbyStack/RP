@@ -27,8 +27,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Método para generar la matriz de confución
-def confusion_matrix(y_predicted, y_test):
-    m = len(set(y_test)) # Numero de clases
+def confusion_matrix(y_predicted, y_test, m):
     mc = np.zeros((m, m)) # Crear matriz de ceros
     for i in range(len(y_predicted)):
         mc[y_predicted[i]][y_test[i]] += 1 # Agregar clasificación predicha con respecto a la real
