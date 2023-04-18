@@ -17,13 +17,13 @@ f_label = ['euclidean', 'cosine_similarity', 'manhattan', 'minkowski', 'correlat
 
 # ================================ DATASET ====================================
 # =============================================================================
-dataset = fetch_openml(name='segment')
+dataset = fetch_openml(name='glass')
 data = np.array(dataset.data)
 targets = np.array(list(set(dataset.target)))
 classes = dataset.target
 for i in range(len(targets)):
-    classes = classes.replace({targets[i]: i})
-classes = np.array(classes)
+    classes = classes.replace({targets[i]: int(i)})
+classes = np.array(classes, dtype=int)
 labels = list(dataset.feature_names)
 
 # dataset = datasets.load_wine()
@@ -53,19 +53,19 @@ labels = list(dataset.feature_names)
 # print(' Average '.center(50, '='))
 # print(np.mean(statics, 0))
 
-import time
-start = time.time()
-n_exps_kfold_dmin(data, classes, f_distances, f_label, multiclass=True, n_splits=5, n_experiments=100)
-end = time.time()
-print(f'Time = {end-start} s') # Segundos y microsegundos
+# import time
+# start = time.time()
+# n_exps_kfold_dmin(data, classes, f_distances, f_label, multiclass=True, n_splits=5, n_experiments=100)
+# end = time.time()
+# print(f'Time = {end-start} s') # Segundos y microsegundos
 
 
 
 # ================================= PCA =======================================
 # =============================================================================
-standar_data = StandardScaler().fit_transform(data) # Estandarizar datos
-eigen_pairs, index = PCA(standar_data)
-data_pca = data[:,index[:15]]
+# standar_data = StandardScaler().fit_transform(data) # Estandarizar datos
+# eigen_pairs, index = PCA(standar_data)
+# data_pca = data[:,index[:4]]
 # wm = weight_matrix(eigen_pairs, 1)
 # data_pca = data @ wm
 # statics, mc = kfold_dmin(data_pca, classes, f_distances[0], multiclass=True, n_splits=5)
@@ -74,16 +74,16 @@ data_pca = data[:,index[:15]]
 # print(statics)
 # print(' Average '.center(50, '='))
 # print(np.mean(statics, 0))
-start = time.time()
-n_exps_kfold_dmin(data_pca, classes, f_distances, f_label, multiclass=True, n_splits=10, n_experiments=100)
-end = time.time()
-print(f'Time = {end-start} s') # Segundos y microsegundos
+# start = time.time()
+# n_exps_kfold_dmin(data_pca, classes, f_distances, f_label, multiclass=True, n_splits=10, n_experiments=100)
+# end = time.time()
+# print(f'Time = {end-start} s') # Segundos y microsegundos
 
 
 
 # ============================== Curva ROC ====================================
 # =============================================================================
-# f_distance = euclidean
+# f_distance = manhattan
 # X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
 # minimun_distance = MinimumDistance()
 # minimun_distance.fit(X_train, Y_train)

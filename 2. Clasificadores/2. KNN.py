@@ -16,20 +16,20 @@ f_label = ['euclidean', 'cosine_similarity', 'manhattan', 'minkowski', 'correlat
 
 # ================================ DATASET ====================================
 # =============================================================================
-# dataset = fetch_openml(name='segment')
-# data = np.array(dataset.data)
-# targets = np.array(list(set(dataset.target)))
-# classes = dataset.target
-# for i in range(len(targets)):
-#     classes = classes.replace({targets[i]: i})
-# classes = np.array(classes)
-# labels = list(dataset.feature_names)
+dataset = fetch_openml(name='segment')
+data = np.array(dataset.data)
+targets = np.array(list(set(dataset.target)))
+classes = dataset.target
+for i in range(len(targets)):
+    classes = classes.replace({targets[i]: i})
+classes = np.array(classes, dtype=int)
+labels = list(dataset.feature_names)
 
-dataset = datasets.load_iris()
-data = dataset.data # Datos del dataset
-classes = dataset.target # Clases
-targets = dataset.target_names # Etiqueta de clase
-labels = dataset.feature_names # Etiquetas de los atributos
+# dataset = datasets.load_wine()
+# data = dataset.data # Datos del dataset
+# classes = dataset.target # Clases
+# targets = dataset.target_names # Etiqueta de clase
+# labels = dataset.feature_names # Etiquetas de los atributos
 
 
 
@@ -71,8 +71,8 @@ labels = dataset.feature_names # Etiquetas de los atributos
 
 # ============================== Curva ROC ====================================
 # =============================================================================
-# f_distance = correlation
-# X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.2, shuffle=True)
+# f_distance = manhattan
+# X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
 # knn = KNNRaul()
 # Y_predicted = knn.predict(X_train, Y_train, X_test, f_distance, k=3, PROBABILITY=True)
 # ROC_curve(Y_train, Y_test, Y_predicted, targets, pos_label=1, multiclass=True)
