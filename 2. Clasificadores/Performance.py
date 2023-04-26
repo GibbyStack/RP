@@ -75,33 +75,62 @@ def get_statistics_mc(mc, multiclass=True):
   # print(f'TNR average = {TNR.mean()}')
 
 # Método para obtener la curva ROC
-def ROC_curve(y_train, y_test, y_predicted, targets, pos_label, multiclass=True):
-  label_binarizer = LabelBinarizer().fit(y_train)
-  y_onehot_test = label_binarizer.transform(y_test)
-  if multiclass: 
-    fig, ax = plt.subplots(figsize=(6, 6))
-    for i in range(len(targets)):
-        RocCurveDisplay.from_predictions(
-            y_onehot_test[:, i],
-            y_predicted[:, i],
-            pos_label=pos_label,
-            name=f"{targets[i]} vs el resto",
-            color='C'+str(i),
-            ax = ax
-        )
-    plt.title("One-vs-Rest multiclass ROC")
-  else:
-    RocCurveDisplay.from_predictions(
-        y_test,
-        y_predicted[:, pos_label],
-        pos_label=pos_label,
-        name=f"{targets[pos_label]} vs {targets[1-pos_label]}",
-        color='C0'
-    )
-    plt.title("Curve ROC")
-  plt.plot([0, 1], [0, 1], "k--", label="Curva ROC para (AUC = 0.5)")
-  plt.axis("square")
-  plt.xlabel("False Positive Rate")
-  plt.ylabel("True Positive Rate")
-  plt.legend()
-  plt.show()
+# def ROC_curve(y_train, y_test, y_predicted, targets, pos_label, multiclass=True):
+#   label_binarizer = LabelBinarizer().fit(y_train)
+#   y_onehot_test = label_binarizer.transform(y_test)
+#   if multiclass: 
+#     fig, ax = plt.subplots(figsize=(6, 6))
+#     for i in range(len(targets)):
+#         RocCurveDisplay.from_predictions(
+#             y_onehot_test[:, i],
+#             y_predicted[:, i],
+#             pos_label=pos_label,
+#             name=f"{targets[i]} vs el resto",
+#             color='C'+str(i),
+#             ax = ax
+#         )
+#     plt.title("One-vs-Rest multiclass ROC")
+#   else:
+#     RocCurveDisplay.from_predictions(
+#         y_test,
+#         y_predicted[:, pos_label],
+#         pos_label=pos_label,
+#         name=f"{targets[pos_label]} vs {targets[1-pos_label]}",
+#         color='C0'
+#     )
+#     plt.title("Curve ROC")
+#   plt.plot([0, 1], [0, 1], "k--", label="Curva ROC para (AUC = 0.5)")
+#   plt.axis("square")
+#   plt.xlabel("False Positive Rate")
+#   plt.ylabel("True Positive Rate")
+#   plt.legend()
+#   plt.show()
+
+
+# from sklearn.model_selection import train_test_split
+# from sklearn import datasets
+# from Distance import *
+# from Dmin import *
+# from sklearn import metrics
+
+# dataset = datasets.load_iris()
+# data = dataset.data # Datos del dataset
+# classes = dataset.target # Clases
+# targets = dataset.target_names # Etiqueta de clase
+# labels = dataset.feature_names # Etiquetas de los atributos
+
+# f_distance = cosine_similarity
+# X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
+# minimun_distance = MinimumDistance()
+# minimun_distance.fit(X_train, Y_train)
+# Y_predicted = minimun_distance.predict(X_test, f_distance, PROBABILITY=True)
+# # ROC_curve(Y_train, Y_test, Y_predicted, targets, pos_label=0, multiclass=True)
+
+# label_binarizer = LabelBinarizer().fit(Y_train)
+# y_onehot_test = label_binarizer.transform(Y_test)
+# y_onehot_test[:, 0]
+# Y_predicted[:, 0]
+
+# for i in range(3):
+#   fpr, tpr, thresholds = metrics.roc_curve(y_onehot_test[:, i], Y_predicted[:, i], pos_label=0)
+#   print(fpr)

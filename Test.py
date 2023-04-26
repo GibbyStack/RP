@@ -72,3 +72,46 @@
 # neigh.fit(X_train, Y_train)
 # predic = neigh.predict(X_test)
 # predic
+
+
+# cls = list(set(classes))
+# index = np.where(classes == 0)[0]
+# for i in range(1, len(cls)):
+#     idx = np.where(classes == cls[i])[0]
+#     index = np.concatenate((index, idx))
+# new_classes = classes[index]
+# new_data = data[index]
+
+# dbc = data_by_class(new_classes)
+# max = 0
+# for i in range(len(dbc) - 1):
+#     max = np.sum(dbc[:i+2])
+#     x_classes = new_classes[:max].copy()
+#     x_data = new_data[:max].copy()
+#     if i > 0:
+#         x_classes[x_classes != i+1] = 0
+#     print(' X_data '.center(50, '='))
+#     print(x_classes)
+
+# m = np.mean(data, axis=0)
+
+# data_s = data - m
+
+# data_s
+
+# mc = [[0 for i in range(4)] for j in range(2)]
+
+# for i in range(len(data)):
+#     x = data_s[i]
+#     if classes[i] == 0:
+#         mc[0] += x * 1
+#         mc[1] += x * 0
+#     else:
+#         mc[0] += x * 0
+#         mc[1] += x * 1
+# mc
+
+# for x in data_s:
+#     r = mc @ x
+#     index = np.where(r == max(r))[0][0]
+#     print(index)
