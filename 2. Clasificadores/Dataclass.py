@@ -25,6 +25,13 @@ def train_test_split_by_class(data, classes, train_size = 0.75):
     x_train, x_test, y_train, y_test = np.array(x_train), np.array(x_test), np.array(y_train), np.array(y_test) 
     return x_train, x_test, y_train, y_test
 
+# Método para codificar las clases como una matriz numérica única
+def one_hot_encoding(classes):
+    n_c = len(set(classes))
+    matrix = [[1 if i == j else 0 for i in range(n_c)] for j in range(n_c)] 
+    new_classes = [matrix[classes[i]] for i in range(len(classes))]
+    return np.array(new_classes)
+
 # from sklearn import datasets
 # dataset = datasets.load_breast_cancer()
 # data = dataset.data # Datos del dataset

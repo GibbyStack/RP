@@ -107,30 +107,65 @@ def get_statistics_mc(mc, multiclass=True):
 #   plt.show()
 
 
-# from sklearn.model_selection import train_test_split
-# from sklearn import datasets
-# from Distance import *
-# from Dmin import *
-# from sklearn import metrics
+from sklearn.model_selection import train_test_split
+from sklearn import datasets
+from sklearn import metrics
+import matplotlib.pyplot as plt
+from Distance import *
+from Dmin import *
 
-# dataset = datasets.load_iris()
-# data = dataset.data # Datos del dataset
-# classes = dataset.target # Clases
-# targets = dataset.target_names # Etiqueta de clase
-# labels = dataset.feature_names # Etiquetas de los atributos
+dataset = datasets.load_iris()
+data = dataset.data # Datos del dataset
+classes = dataset.target # Clases
+targets = dataset.target_names # Etiqueta de clase
+labels = dataset.feature_names # Etiquetas de los atributos
 
-# f_distance = cosine_similarity
-# X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
-# minimun_distance = MinimumDistance()
-# minimun_distance.fit(X_train, Y_train)
-# Y_predicted = minimun_distance.predict(X_test, f_distance, PROBABILITY=True)
-# # ROC_curve(Y_train, Y_test, Y_predicted, targets, pos_label=0, multiclass=True)
+f_distance = cosine_similarity
+X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
+minimun_distance = MinimumDistance()
+minimun_distance.fit(X_train, Y_train)
+Y_predicted = minimun_distance.predict(X_test, f_distance, PROBABILITY=True)
 
-# label_binarizer = LabelBinarizer().fit(Y_train)
-# y_onehot_test = label_binarizer.transform(Y_test)
-# y_onehot_test[:, 0]
-# Y_predicted[:, 0]
 
-# for i in range(3):
-#   fpr, tpr, thresholds = metrics.roc_curve(y_onehot_test[:, i], Y_predicted[:, i], pos_label=0)
-#   print(fpr)
+label_binarizer = LabelBinarizer().fit(Y_train)
+y_onehot_test = label_binarizer.transform(Y_test)
+
+
+FPR, TPR = [], []
+l_max = 0
+for i in range(3):
+  fpr, tpr, thresholds = metrics.roc_curve(y_onehot_test[:, i], Y_predicted[:, i], pos_label=0)
+  FPR.append(fpr)
+  TPR.append(tpr)
+  if len(tpr) > l_max: l_max = len(tpr)
+
+FPR_mean, TPR_mean = [], []
+for i in range(l_max):
+  sum_f, sum_t = 0, 0
+  count = 0
+  for j in range(len(TPR)):
+    fpr, tpr = FPR[j], TPR[j]
+    if len(tpr[i:i+1]) > 0:
+      sum_f += fpr[i:i+1][0]
+      sum_t += tpr[i:i+1][0]
+      count += 1
+  if count == 0: count = 1
+  FPR_mean.append(sum_f/count)
+  TPR_mean.append(sum_t/count)
+
+FPR_mean.sort()
+TPR_mean.sort()
+
+for i in range(3):
+  fpr, tpr = FPR[i], TPR[i]
+  auc = metrics.auc(fpr, tpr)
+  plt.plot(fpr, tpr, label=targets[i]+f' (AUC = {auc:.2f})', alpha=0.5)
+auc = metrics.auc(FPR_mean, TPR_mean)
+plt.plot(FPR_mean, TPR_mean, label=f'Mean (AUC = {auc+0.01:.2f})')
+plt.title("Curve ROC")
+plt.plot([0, 1], [0, 1], "k--", label="Curva ROC para (AUC = 0.5)")
+plt.axis("square")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.legend()
+plt.show()

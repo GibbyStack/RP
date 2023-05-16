@@ -115,3 +115,26 @@
 #     r = mc @ x
 #     index = np.where(r == max(r))[0][0]
 #     print(index)
+
+# FPR_mean, TPR_mean = [], []
+# limits = [0.0, 0.2, 0.4, 0.6, 0.8, 1.1]
+# for i in range(len(limits) - 1):
+#   print(f'Limits = {limits[i]}, {limits[i+1]}'.center(50, '='))
+#   N_fpr, N_tpr = np.array([]), np.array([])
+#   for j in range(len(FPR)):
+#     fpr, tpr = FPR[j], TPR[j]
+#     f_idx = np.where(fpr >= limits[i])[0]
+#     n_fpr, n_tpr = fpr[f_idx], tpr[f_idx]
+#     f_idx = np.where(n_fpr < limits[i+1])[0]
+#     n_fpr, n_tpr = n_fpr[f_idx], n_tpr[f_idx]
+#     N_fpr = np.concatenate((N_fpr, n_fpr))
+#     N_tpr = np.concatenate((N_tpr, n_tpr))
+#   if len(N_fpr):
+#     FPR_mean.append(sum(N_fpr) / len(N_fpr))
+#   if len(N_tpr):
+#     TPR_mean.append(sum(N_tpr) / len(N_tpr))
+
+# FPR_mean
+# TPR_mean
+# auc = metrics.auc(FPR_mean, TPR_mean)
+# auc

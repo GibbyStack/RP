@@ -10,6 +10,7 @@ def search_idx(array, item):
     return False, 0.000000000001
 
 class NaiveBayes():
+    
     def __init__(self):
         ''' p(A|B) = P(B|A)P(A) / P(B) '''
         self.data_by_class = [] # Datos por clase

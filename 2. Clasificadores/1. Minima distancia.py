@@ -83,9 +83,9 @@ labels = dataset.feature_names # Etiquetas de los atributos
 
 # ============================== Curva ROC ====================================
 # =============================================================================
-f_distance = cosine_similarity
-X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
-minimun_distance = MinimumDistance()
-minimun_distance.fit(X_train, Y_train)
-Y_predicted = minimun_distance.predict(X_test, f_distance, PROBABILITY=True)
-ROC_curve(Y_train, Y_test, Y_predicted, targets, pos_label=0, multiclass=True)
+# f_distance = cosine_similarity
+# X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
+# minimun_distance = MinimumDistance()
+# minimun_distance.fit(X_train, Y_train)
+# Y_predicted = minimun_distance.predict(X_test, f_distance, PROBABILITY=True)
+# ROC_curve(Y_train, Y_test, Y_predicted, targets, pos_label=0, multiclass=True)

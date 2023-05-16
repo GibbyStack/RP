@@ -4,6 +4,7 @@ from StatiticsPlots import *
 import numpy as np
 
 class MinimumDistance():
+    
     def __init__(self):
         self.prototypes = []
 
