@@ -45,65 +45,7 @@ class CAP():
             predictions.append(prediction)
         predictions = np.array(predictions)
         return predictions
-
-class MULTI_CAP():
-
-    def __init__(self):
-        self.vm = []
-        self.mc = []
-
-    # Método para entrenar el clasificador
-    def fit(self, x_train, y_train):
-        n = len(x_train[0])
-        cls_t = list(set(y_train))
-        for i in range(len(cls_t)):
-            index_p = np.where(y_train == cls_t[i])[0]
-            print(f' {i} '.center(50, '='))
-            print(index_p)
-            x_p = np.mean(x_train[index_p], axis=0)
-            x_n = []
-            for j in range(len(cls_t)):
-                if i != j:
-                    index_n = np.where(y_train == cls_t[j])[0]
-                    # print(index_n)
-                    x_n.append(np.mean(x_train[index_n], axis=0))
-            x_n = np.mean(x_n, axis=0)
-            self.vm.append((x_p+x_n)/2)
-            
-            data_train = x_train - self.vm[i]
-            self.mc.append([[0 for _ in range(n)] for _ in range(2)])
-            for j in range(len(data_train)):
-                x = data_train[j]
-                if j in index_p:
-                    # print(f' j = {j}, True')
-                    self.mc[i][0] += x * 1
-                else:
-                    # print(f' j = {j}, False')
-                    self.mc[i][1] += x * 1
-    
-    # Método para obtener prediccionees
-    def predict(self, x_test):
-        predictions = []
-        for x in x_test:
-            prediction = []
-            for i in range(len(self.mc)):
-                x_vm = x - self.vm[i]
-                x_mc = self.mc[i] @ x_vm
-                prediction.append(np.argmin(x_mc))
-            predictions.append(prediction)
-        predictions = np.array(predictions)
-        return predictions
-        # for i in range(len(self.mc)):
-        #     predictions = []
-        #     data_test = x_test - self.vm[i]
-        #     for x in data_test:
-        #         data_mc = self.mc[i] @ x
-        #         prediction = np.argmin(data_mc)
-        #         predictions.append(prediction)
-        #     Y_predicted.append(predictions)
-        # Y_predicted = np.array(Y_predicted)
-        # return Y_predicted
-        
+      
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 # from sklearn.datasets import fetch_openml
@@ -114,65 +56,68 @@ classes = dataset.target # Clases
 targets = dataset.target_names # Etiqueta de clase
 labels = dataset.feature_names # Etiquetas de los atributos
 
-# dataset = fetch_openml(name='glass')
-# data = np.array(dataset.data)
-# targets = np.array(list(set(dataset.target)))
-# classes = dataset.target
-# for i in range(len(targets)):
-#     classes = classes.replace({targets[i]: int(i)})
-# classes = np.array(classes, dtype=int)
-# labels = list(dataset.feature_names)
+# import matplotlib.pyplot as plt
+# plt.scatter(data[:, 0], data[:, 3], c=classes, cmap='Accent')
+# classes = np.concatenate((np.zeros(50, dtype=int), np.ones(100, dtype=int)))
+X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
 
-data = StandardScaler().fit_transform(data)
-X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.8, shuffle=True)
+def search_index(classes, l_classes):
+    index = []
+    for i in range(len(classes)):
+        if classes[i] in l_classes:
+            index.append(i)
+    return np.array(index)
+    
 
-# cap = CAP()
-# cap.fit(X_train, Y_train)
-# predictions = cap.predict(X_test)
-# Y_test
+Y_predicted = np.full(len(Y_test), None)
+
+Y_train1 = Y_train.copy()
+index_p = np.where(Y_train == 0)[0]
+index_n = np.where(Y_train != 0)[0]
+Y_train1[index_p] = 0
+Y_train1[index_n] = 1
+cap = CAP()
+cap.fit(X_train, Y_train1)
+predictions = cap.predict(X_test)
+index_y1 = np.where(predictions == 0)[0]
+Y_predicted[index_y1] = 0
 
 
-mcap = MULTI_CAP()
-mcap.fit(X_train, Y_train)
-predictions = mcap.predict(X_test)
+
+l_classes = [1, 2]
+index_l = search_index(Y_train, l_classes)
+X_train2 = X_train[index_l].copy()
+Y_train2 = Y_train[index_l].copy()
+index_p = np.where(Y_train2 == 1)[0]
+index_n = np.where(Y_train2 == 2)[0]
+Y_train2[index_p] = 0
+Y_train2[index_n] = 1
+cap = CAP()
+cap.fit(X_train2, Y_train2)
+predictions = cap.predict(X_test)
+index_y2 = np.where(predictions == 0)[0]
+
+
+
+d1 = set(index_y1).difference(set(index_y2))
+d2 = set(index_y2).difference(set(index_y1))
+new_index = np.array(list(d1.union(d2)))
+Y_predicted[new_index] = 1
+
+ 
+
+index_y3 = np.where(Y_predicted == None)[0]
+Y_predicted[index_y3] = 2
+Y_predicted.astype(int)
+Y_predicted
 Y_test
-predictions
-
-# for i in range(len(predictions)):
-#     prediction = predictions[i]
-#     if np.count_nonzero(prediction) > 1:
-#         idx = np.where(prediction == 1)[0]
-#         print(idx)
 
 
 
-m = len(set(classes))
-lernmatrix = np.zeros((m, m), dtype=int)
-for i in range(m):
-    lernmatrix[i][i] = 1
-
-corr = 0
+correct = 0
 for i in range(len(Y_test)):
-    print(f' {i} '.center(25, '='))
-    index = Y_test[i]
-    print(f'{lernmatrix[index]} = {predictions[i]}')
-    # if (lernmatrix[index] == predictions[i]).all():
-    if predictions[i][index] == 1:
-        print(True)
-        corr += 1
-    else:
-        print(False)
+    if Y_test[i] == Y_predicted[i]:
+        correct += 1
 
-corr / len(Y_test)
-
-
-
-# classes = np.concatenate((np.zeros(50, dtype=int), np.ones(50, dtype=int)))
-# data_copy = np.concatenate((data[100:], data[50:100]))
-# cag = CAG()
-# cag.fit(data_copy, classes)
-# predictions = cag.predict(data_copy)
-# classes
-# predictions
-
-# X_train, X_test, Y_train, Y_test = train_test_by_class(X_train, X_test, Y_train, Y_test)
+acc = correct / len(Y_test)
+acc

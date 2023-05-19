@@ -9,20 +9,20 @@ from Performance import *
 
 # ================================ DATASET ====================================
 # =============================================================================
-dataset = fetch_openml(name='segment')
-data = np.array(dataset.data)
-targets = np.array(list(set(dataset.target)))
-classes = dataset.target
-for i in range(len(targets)):
-    classes = classes.replace({targets[i]: i})
-classes = np.array(classes, dtype=int)
-labels = list(dataset.feature_names)
-
-# dataset = datasets.load_wine()
-# data = dataset.data
+# dataset = fetch_openml(name='glass')
+# data = np.array(dataset.data)
+# targets = np.array(list(set(dataset.target)))
 # classes = dataset.target
-# targets = dataset.target_names
-# labels = dataset.feature_names
+# for i in range(len(targets)):
+#     classes = classes.replace({targets[i]: i})
+# classes = np.array(classes, dtype=int)
+# labels = list(dataset.feature_names)
+
+dataset = datasets.load_iris()
+data = dataset.data
+classes = dataset.target
+targets = dataset.target_names
+labels = dataset.feature_names
 
 
 
@@ -63,8 +63,10 @@ labels = list(dataset.feature_names)
 
 # ============================== Curva ROC ====================================
 # =============================================================================
-# X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
-# naive_bayes = NaiveBayes()
-# naive_bayes.fit(X_train, Y_train)
-# Y_predicted = naive_bayes.predict(X_test, PROBABILITY=True)
+X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
+naive_bayes = NaiveBayes()
+naive_bayes.fit(X_train, Y_train)
+Y_predicted = naive_bayes.predict(X_test, PROBABILITY=True)
+Y_predicted = 1 - Y_predicted
+ROC_curve(Y_test, Y_predicted, targets)
 # ROC_curve(Y_train, Y_test, Y_predicted, targets, pos_label=1, multiclass=True)

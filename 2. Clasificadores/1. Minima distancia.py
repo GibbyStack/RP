@@ -17,21 +17,20 @@ f_label = ['euclidean', 'cosine_similarity', 'manhattan', 'minkowski', 'correlat
 
 # ================================ DATASET ====================================
 # =============================================================================
-# dataset = fetch_openml(name='glass')
-# data = np.array(dataset.data)
-# targets = np.array(list(set(dataset.target)))
-# classes = dataset.target
-# for i in range(len(targets)):
-#     classes = classes.replace({targets[i]: int(i)})
-# classes = np.array(classes, dtype=int)
-# labels = list(dataset.feature_names)
+dataset = fetch_openml(name='segment')
+data = np.array(dataset.data)
+targets = np.array(list(set(dataset.target)))
+classes = dataset.target
+for i in range(len(targets)):
+    classes = classes.replace({targets[i]: int(i)})
+classes = np.array(classes, dtype=int)
+labels = list(dataset.feature_names)
 
-dataset = datasets.load_iris()
-data = dataset.data # Datos del dataset
-classes = dataset.target # Clases
-targets = dataset.target_names # Etiqueta de clase
-labels = dataset.feature_names # Etiquetas de los atributos
-
+# dataset = datasets.load_wine()
+# data = dataset.data # Datos del dataset
+# classes = dataset.target # Clases
+# targets = dataset.target_names # Etiqueta de clase
+# labels = dataset.feature_names # Etiquetas de los atributos
 
 
 # =============================== ANALISIS ====================================
@@ -83,9 +82,10 @@ labels = dataset.feature_names # Etiquetas de los atributos
 
 # ============================== Curva ROC ====================================
 # =============================================================================
-# f_distance = cosine_similarity
-# X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
-# minimun_distance = MinimumDistance()
-# minimun_distance.fit(X_train, Y_train)
-# Y_predicted = minimun_distance.predict(X_test, f_distance, PROBABILITY=True)
+f_distance = euclidean
+X_train, X_test, Y_train, Y_test = train_test_split(data, classes, train_size=0.5, shuffle=True)
+minimun_distance = MinimumDistance()
+minimun_distance.fit(X_train, Y_train)
+Y_predicted = minimun_distance.predict(X_test, f_distance, PROBABILITY=True)
+ROC_curve(Y_test, Y_predicted, targets)
 # ROC_curve(Y_train, Y_test, Y_predicted, targets, pos_label=0, multiclass=True)

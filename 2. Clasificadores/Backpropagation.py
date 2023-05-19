@@ -39,7 +39,7 @@ class NeuralNetwork():
             return outputs
         outputs = outputs[-1]
         if PROBABILITY:
-            return outputs
+            return 1-outputs
         predictions = np.argmax(outputs, axis=1)
         return predictions
 
@@ -90,21 +90,21 @@ def n_exps_kfold_dmin(data, classes, layers, lr=0.05, epochs=1000, multiclass=Tr
         statics_mean = np.mean(statics, 0)
         experiments.append(statics_mean)
         c_matrix += mc
-    c_matrix = np.floor(c_matrix/n_experiments)
+    c_matrix = np.round(c_matrix/n_experiments)
     print(' Matriz de confución '.center(50, '='))
     print(c_matrix)
     df = pd.DataFrame(experiments, columns=['ACC', 'PPV', 'TPR', 'TNR'])
     print(df.describe())
 
 
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-from sklearn.datasets import fetch_openml
-from Distance import *
+# from sklearn import datasets
+# from sklearn.model_selection import train_test_split
+# from sklearn.datasets import fetch_openml
+# from Distance import *
 
-dataset = datasets.load_iris()
-data = dataset.data # Datos del dataset
-classes = dataset.target # Clases
+# dataset = datasets.load_iris()
+# data = dataset.data # Datos del dataset
+# classes = dataset.target # Clases
 
 # dataset = fetch_openml(name='segment')
 # data = np.array(dataset.data)
@@ -115,16 +115,16 @@ classes = dataset.target # Clases
 # classes = np.array(classes, dtype=int)
 # labels = list(dataset.feature_names)
 
-data = StandardScaler().fit_transform(data)
-Y = one_hot_encoding(classes)
+# data = StandardScaler().fit_transform(data)
+# Y = one_hot_encoding(classes)
 
 # len(classes[0])
-nn = NeuralNetwork([len(data[0]), 2, len(Y[0])])
-nn.fit(data, Y, lr=0.05, epochs=1000)
-pred = nn.predict(data)
-classes
-pred
-classes[:100]
-pred[:100]
+# nn = NeuralNetwork([len(data[0]), 2, len(Y[0])])
+# nn.fit(data, Y, lr=0.05, epochs=1000)
+# pred = nn.predict(data)
+# classes
+# pred
+# classes[:100]
+# pred[:100]
 
 # n_exps_kfold_dmin(data, classes, layers=[len(data[0]), 4, 7], lr=0.005, epochs=1000, n_splits=5, n_experiments=1)
