@@ -1,5 +1,4 @@
 from sklearn.model_selection import KFold
-from sklearn.preprocessing import StandardScaler
 from Dataclass import one_hot_encoding
 from Performance import *
 import numpy as np
@@ -81,7 +80,7 @@ def kfold_NN(data, classes, layers, lr, epochs, multiclass=True, n_splits=5):
     return statics, MC
 
 # Método para validar mínimo distancia con kfold un determinado número de experimentos
-def n_exps_kfold_dmin(data, classes, layers, lr=0.05, epochs=1000, multiclass=True, n_splits=5, n_experiments=10):
+def n_exps_kfold_NN(data, classes, layers, lr=0.05, epochs=1000, multiclass=True, n_splits=5, n_experiments=10):
     experiments = []
     m = len(set(classes))
     c_matrix = np.zeros((m, m))
@@ -99,6 +98,7 @@ def n_exps_kfold_dmin(data, classes, layers, lr=0.05, epochs=1000, multiclass=Tr
 
 # from sklearn import datasets
 # from sklearn.model_selection import train_test_split
+# from sklearn.preprocessing import StandardScaler
 # from sklearn.datasets import fetch_openml
 # from Distance import *
 

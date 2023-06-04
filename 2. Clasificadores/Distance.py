@@ -2,7 +2,7 @@ from scipy.spatial import distance
 
 vector_norm = lambda x, m: - 2 * (x.T @ m) + (m.T @ m)
 
-euclidean = lambda x, m: distance.euclidean(x, m)
+euclidean = lambda x, m: distance.euclidean(x.reshape(-1), m)
 
 cosine_similarity = lambda x, m: distance.cosine(x, m)
 

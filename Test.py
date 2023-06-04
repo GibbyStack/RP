@@ -138,3 +138,100 @@
 # TPR_mean
 # auc = metrics.auc(FPR_mean, TPR_mean)
 # auc
+
+# def train_test_by_class(x_train, x_test, y_train, y_test):
+#     classes = list(set(y_train))
+#     index_train, index_test = np.array([], dtype=int), np.array([], dtype=int)
+#     for c in classes:
+#         idx_train = np.where(y_train == c)[0]
+#         idx_test = np.where(y_test == c)[0]
+#         index_train = np.concatenate((index_train, idx_train))
+#         index_test = np.concatenate((index_test, idx_test))
+#     x_train, y_train = x_train[index_train], y_train[index_train]
+#     x_test, y_test = x_test[index_test], y_test[index_test]
+#     return x_train, x_test, y_train, y_test
+
+# class CAP():
+
+#     def __init__(self):
+#         self.m = []
+#         self.mc = []
+
+#     # Método para entrenar el clasificador
+#     def fit(self, x_train, y_train):
+#         self.m = np.mean(x_train, axis=0)
+#         x_train = x_train - self.m
+#         n = len(x_train[0])
+#         self.mc = [[0 for _ in range(n)] for _ in range(2)]
+#         for i in range(len(x_train)):
+#             x = x_train[i]
+#             if y_train[i] == 0:
+#                 self.mc[0] += x * 1
+#             else:
+#                 self.mc[1] += x * 1
+
+#     # Método para obtener predicciones
+#     def predict(self, x_test):
+#         x_test = x_test - self.m
+#         predictions = []
+#         for x in x_test:
+#             x_mc = self.mc @ x
+#             prediction = np.argmax(x_mc)
+#             predictions.append(prediction)
+#         predictions = np.array(predictions)
+#         return predictions
+
+
+# KMEANS
+# import numpy as np
+# from sklearn.cluster import KMeans
+# from sklearn.datasets import load_digits
+
+# # Cargar el conjunto de datos CIFAR-10
+# cifar = load_digits()
+# X = cifar.data.astype(np.float32)  # Obtener las imágenes en forma de matriz de características
+# y = cifar.target  # Etiquetas de clase correspondientes a cada imagen
+
+# # Normalizar los datos
+# X /= 255.0
+
+# # Aplicar k-means
+# num_clusters = 10  # Número de clusters deseado
+# kmeans = KMeans(n_clusters=num_clusters)
+# kmeans.fit(X)
+
+# # Obtener las etiquetas de cluster asignadas a cada imagen
+# cluster_labels = kmeans.labels_
+
+# # Imprimir los resultados
+# for cluster in range(num_clusters):
+#     print(f"Cluster {cluster}:")
+#     cluster_samples = np.where(cluster_labels == cluster)[0]
+#     for sample_idx in cluster_samples[:10]:  # Mostrar solo las primeras 5 imágenes por cluster
+#         print(f"  - Imagen {sample_idx}: Clase {y[sample_idx]}")
+
+# from sklearn.metrics import silhouette_score, adjusted_rand_score
+# inertia = kmeans.inertia_
+# print(inertia)
+# silhouette_avg = silhouette_score(X, cluster_labels)
+# print(silhouette_avg)
+# adjusted_rand_index = adjusted_rand_score(y, cluster_labels)
+# print(adjusted_rand_index)
+
+# from sklearn.decomposition import PCA
+# import matplotlib.pyplot as plt
+
+# centroids = kmeans.cluster_centers_
+
+# pca = PCA(n_components=2)
+# reduced_images = pca.fit_transform(X)
+# reduced_centroid = pca.fit_transform(centroids)
+
+# # Visualizar las imágenes en función de los clusters asignados
+# plt.scatter(reduced_images[:, 0], reduced_images[:, 1], c=cluster_labels, cmap='viridis')
+# plt.scatter(reduced_centroid[:, 0], reduced_centroid[:, 1], marker='x', color='red', s=100, label='Centroids')
+# plt.title('Clustering with K-Means')
+# plt.xlabel('Principal Component 1')
+# plt.ylabel('Principal Component 2')
+# plt.legend()
+# plt.show()
